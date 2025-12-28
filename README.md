@@ -51,7 +51,7 @@ Crie um arquivo `.env` na raiz do projeto:
 NODE_ENV=development
 PORT=3000
 JWT_SECRET=sua_chave_secreta_aqui
-DATABASE_URL="postgresql://jefferson:30302220@postgres:5432/medicaldb?schema=public"
+DATABASE_URL="postgresql://seunome:000000@postgres:5432/medicaldb?schema=public"
 ```
 
 ### 4️⃣ Suba o banco de dados com Docker
