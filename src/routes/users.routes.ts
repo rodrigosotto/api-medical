@@ -22,7 +22,7 @@ export async function usersRoutes(fastify: FastifyInstance) {
         },
       },
     },
-    controller.list.bind(controller)
+    controller.list.bind(controller),
   );
 
   fastify.withTypeProvider<ZodTypeProvider>().post(
@@ -39,6 +39,46 @@ export async function usersRoutes(fastify: FastifyInstance) {
         },
       },
     },
-    controller.create.bind(controller)
+    controller.create.bind(controller),
+  );
+
+  fastify.withTypeProvider<ZodTypeProvider>().put(
+    "/users/:id",
+    {
+      schema: {
+        description: "Atualiza um usuário",
+        tags: ["users"],
+        params: z.object({
+          id: z.string(),
+        }),
+        body: z.object({
+          name: z.string().optional(),
+          type: z.enum(["medico", "paciente"]).optional(),
+        }),
+        response: {
+          200: userWithPasswordSchema,
+          404: errorSchema,
+        },
+      },
+    },
+    controller.update.bind(controller),
+  );
+
+  fastify.withTypeProvider<ZodTypeProvider>().delete(
+    "/users/:id",
+    {
+      schema: {
+        description: "Deleta um usuário",
+        tags: ["users"],
+        params: z.object({
+          id: z.string(),
+        }),
+        response: {
+          204: z.null(),
+          404: errorSchema,
+        },
+      },
+    },
+    controller.delete.bind(controller),
   );
 }

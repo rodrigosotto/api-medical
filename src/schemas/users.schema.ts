@@ -17,7 +17,7 @@ export const userResponseSchema = z.object({
   name: z.string(),
   email: z.string(),
   type: z.string(),
-  createdAt: z.date(),
+  createdAt: z.union([z.date(), z.string()]),
 });
 
 export const userWithPasswordSchema = userResponseSchema.extend({

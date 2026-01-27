@@ -72,4 +72,23 @@ export class UsersService {
       },
     });
   }
+
+  async findByEmail(email: string) {
+    return this.prisma.user.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        type: true,
+        createdAt: true,
+      },
+    });
+  }
+
+  async delete(id: number) {
+    return this.prisma.user.delete({
+      where: { id },
+    });
+  }
 }

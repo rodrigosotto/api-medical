@@ -33,10 +33,10 @@ export async function buildServer() {
   await fastify.register(swaggerPlugin);
 
   // Registrar rotas
-  await fastify.register(authRoutes);
-  await fastify.register(usersRoutes);
-  await fastify.register(doctorsRoutes);
-  await fastify.register(patientsRoutes);
+  await fastify.register(authRoutes, { prefix: "/api/auth" });
+  await fastify.register(usersRoutes, { prefix: "/api" });
+  await fastify.register(doctorsRoutes, { prefix: "/api" });
+  await fastify.register(patientsRoutes, { prefix: "/api" });
 
   return fastify;
 }

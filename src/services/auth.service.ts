@@ -22,6 +22,7 @@ export class AuthService {
       name: user.name,
       email: user.email,
       type: user.type,
+      createdAt: user.createdAt.toISOString(),
     };
   }
 }

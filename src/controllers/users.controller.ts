@@ -36,4 +36,36 @@ export class UsersController {
       return reply.status(400).send({ error: "Erro ao criar usuário" });
     }
   }
+
+  async update(request: FastifyRequest, reply: FastifyReply) {
+    const { id } = request.params as { id: string };
+    const { name, type } = request.body as {
+      name?: string;
+      type?: string;
+    };
+
+    try {
+      const user = await this.usersService.update(Number(id), { name, type });
+      return reply.send(user);
+    } catch (error: any) {
+      if (error?.code === "P2025") {
+        return reply.status(404).send({ error: "Usuário não encontrado" });
+      }
+      return reply.status(400).send({ error: "Erro ao atualizar usuário" });
+    }
+  }
+
+  async delete(request: FastifyRequest, reply: FastifyReply) {
+    const { id } = request.params as { id: string };
+
+    try {
+      await this.usersService.delete(Number(id));
+      return reply.status(204).send();
+    } catch (error: any) {
+      if (error?.code === "P2025") {
+        return reply.status(404).send({ error: "Usuário não encontrado" });
+      }
+      return reply.status(400).send({ error: "Erro ao deletar usuário" });
+    }
+  }
 }

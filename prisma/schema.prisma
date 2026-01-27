@@ -4,13 +4,88 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserType {
+  medico
+  paciente
+}
+
+enum DoctorStatus {
+  pendente
+  aprovado
+  rejeitado
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String
-  email     String   @unique
-  type      String
+  email     String    @unique
+  type      UserType
   password  String
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
+  
+  // Relacionamentos
+  doctor    Doctor?
+  patient   Patient?
 }
+
+model Doctor {
+  id            Int          @id @default(autoincrement())
+  userId        Int          @unique
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Dados pessoais
+  fullName      String
+  cpf           String       @unique
+  crm           String       @unique
+  specialty     String
+  phone         String
+  
+  // Endereço
+  street        String
+  number        String
+  complement    String?
+  neighborhood  String
+  city          String
+  state         String
+  zipCode       String
+  
+  // Status de aprovação
+  status        DoctorStatus @default(pendente)
+  approvedAt    DateTime?
+  rejectedAt    DateTime?
+  rejectionReason String?
+  
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model Patient {
+  id            Int      @id @default(autoincrement())
+  userId        Int      @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Dados pessoais
+  fullName      String
+  phone         String
+  photo         String?
+  
+  // Endereço
+  street        String
+  number        String
+  complement    String?
+  neighborhood  String
+  city          String
+  state         String
+  zipCode       String
+  
+  // Convênio
+  hasInsurance  Boolean  @default(false)
+  insuranceName String?
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
