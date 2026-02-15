@@ -6,6 +6,7 @@ import { authenticate } from "../middlewares/authenticate.js";
 import { createRateLimiter } from "../plugins/rateLimit.js";
 import {
   loginSchema,
+  registerSchema,
   tokenResponseSchema,
   errorSchema,
   doctorRegistrationSchema,
@@ -25,6 +26,23 @@ export async function authRoutes(fastify: FastifyInstance) {
     windowMs: 15 * 60 * 1000, // 15 minutos
     message: "Muitas tentativas de login. Tente novamente em 15 minutos",
   });
+
+  fastify.withTypeProvider<ZodTypeProvider>().post(
+    "/register",
+    {
+      schema: {
+        description: "Registra um novo usuário e retorna um token JWT",
+        tags: ["auth"],
+        body: registerSchema,
+        response: {
+          201: tokenResponseSchema,
+          409: errorSchema,
+          500: errorSchema,
+        },
+      },
+    },
+    controller.register.bind(controller),
+  );
 
   fastify.withTypeProvider<ZodTypeProvider>().post(
     "/login",

@@ -85,7 +85,7 @@ docker-compose up -d
 Após iniciar a aplicação, acesse a documentação interativa:
 
 ```
-http://localhost:3000/docs
+http://localhost:3001/docs
 ```
 
 ## 🔐 Testando a API
@@ -93,7 +93,7 @@ http://localhost:3000/docs
 ### 1. Criar um usuário
 
 ```bash
-curl -X POST http://localhost:3000/users \
+curl -X POST http://localhost:3001/users \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Dr. João Silva",
@@ -106,7 +106,7 @@ curl -X POST http://localhost:3000/users \
 ### 2. Fazer login
 
 ```bash
-curl -X POST http://localhost:3000/login \
+curl -X POST http://localhost:3001/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "joao@medical.com",
@@ -118,13 +118,13 @@ curl -X POST http://localhost:3000/login \
 
 ```bash
 # Salvar o token em uma variável
-TOKEN=$(curl -s -X POST http://localhost:3000/login \
+TOKEN=$(curl -s -X POST http://localhost:3001/login \
   -H "Content-Type: application/json" \
   -d '{"email":"joao@medical.com","password":"senha123"}' \
   | grep -o '"token":"[^"]*"' | cut -d'"' -f4)
 
 # Usar o token para acessar o dashboard
-curl -X GET http://localhost:3000/doctors/dashboard \
+curl -X GET http://localhost:3001/doctors/dashboard \
   -H "Authorization: Bearer $TOKEN"
 ```
 

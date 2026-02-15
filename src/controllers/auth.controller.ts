@@ -21,6 +21,41 @@ export class AuthController {
     this.patientsService = new PatientsService(fastify.prisma);
   }
 
+  async register(request: FastifyRequest, reply: FastifyReply) {
+    const { name, email, password, userType } = request.body as {
+      name: string;
+      email: string;
+      password: string;
+      userType?: string;
+    };
+
+    try {
+      const existingUser = await this.usersService.findByEmail(email);
+
+      if (existingUser) {
+        return reply.status(409).send({ error: "Email já cadastrado" });
+      }
+
+      const user = await this.usersService.create({
+        name,
+        email,
+        password,
+        type: userType || "patient",
+      });
+
+      const token = request.server.jwt.sign({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        type: user.type,
+      });
+
+      return reply.status(201).send({ token });
+    } catch (error) {
+      return reply.status(500).send({ error: "Erro ao criar usuário" });
+    }
+  }
+
   async login(request: FastifyRequest, reply: FastifyReply) {
     const { email, password } = request.body as {
       email: string;
